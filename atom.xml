@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>UxMemo</title>
+  <title>星河千里</title>
   <subtitle>交互设计备忘录</subtitle>
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://blog.uxmemo.xyz/"/>
-  <updated>2017-02-22T13:37:26.000Z</updated>
+  <updated>2017-02-22T14:37:32.000Z</updated>
   <id>http://blog.uxmemo.xyz/</id>
   
   <author>
@@ -20,7 +20,7 @@
     <link href="http://blog.uxmemo.xyz/2017/02/21/css-relative-properties/"/>
     <id>http://blog.uxmemo.xyz/2017/02/21/css-relative-properties/</id>
     <published>2017-02-21T08:26:23.000Z</published>
-    <updated>2017-02-22T13:37:26.000Z</updated>
+    <updated>2017-02-22T14:37:32.000Z</updated>
     
     <content type="html"><![CDATA[<p>一个响应式布局，要能够根据设备屏幕尺寸的改变，动态的调整页面内容，展现不同的设计风格。<br>在进行响应式的 CSS 代码编写过程中，经常会用到一些相对尺寸，以达到相对定位的目的。例如，常见的响应式布局中需要用到“自适应的图片”、“流动布局”等技术。</p>
 <p>体现在 CSS 代码编写上，就需要前端开发人员<strong>精准</strong>掌握特定属性的相对量表示方法。<br>然而，其中一些相对量的计算方法很容易混淆。</p>
