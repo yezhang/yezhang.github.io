@@ -1,0 +1,23 @@
+direction: down
+
+canvas: "<canvas> 渲染层\n你自己画文本、光标、选区高亮（对系统只是像素）" {
+  style.fill: "#D8E0E2"
+  style.stroke: "#86A0A6"
+}
+ta: "<textarea>（透明，opacity: 0 或移出视口）\n代理输入目标：真实持有焦点、文本值、选区\n接收 composition / input，唤起系统 IME" {
+  style.fill: "#E4D5D2"
+  style.stroke: "#B09895"
+}
+sync: "同步链路：textarea.value / selection → 你的文档模型 → 重绘 canvas" {
+  shape: text
+  style.font-color: "#55524C"
+}
+
+canvas -> ta: "透明 textarea 叠加上方" {
+  style.stroke: "#9A948A"
+  style.stroke-dash: 4
+  style.font-color: "#55524C"
+}
+ta -> sync: {
+  style.stroke: "#9A948A"
+}

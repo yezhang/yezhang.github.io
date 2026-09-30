@@ -1,0 +1,49 @@
+direction: down
+
+sysime: "系统 IME\nmacOS TIS / Win TSF / Linux IBus" {
+  style.fill: "#E7E3DA"
+  style.stroke: "#9A948A"
+}
+browser: "① Browser 进程：平台 client 接口在此实现\nRenderWidgetHostViewMac 实现 NSTextInputClient（insertText / setMarkedText…）\nRenderWidgetHostViewAura 实现 ui::TextInputClient（SetCompositionText…）" {
+  style.fill: "#D8E0E2"
+  style.stroke: "#86A0A6"
+}
+ipc: "② 跨进程 IPC（WidgetInputHandler mojom）\nImeSetComposition / ImeCommitText / ImeFinishComposingText" {
+  style.fill: "#E4D5D2"
+  style.stroke: "#B09895"
+}
+renderer: "③ Renderer 进程 → Blink\nRenderWidget → WebViewImpl::setComposition / confirmComposition" {
+  style.fill: "#DCE1D4"
+  style.stroke: "#8FA088"
+}
+imc: "④ Blink 核心\nInputMethodController（core/editing/ime/）— IME 会话状态机" {
+  style.fill: "#DED8DC"
+  style.stroke: "#9A8E96"
+}
+domev: "⑤ 事件派发到焦点元素\ncompositionstart / update / end + beforeinput + input" {
+  style.fill: "#E8E2D4"
+  style.stroke: "#AFA48E"
+}
+target: "<textarea> / <input> / contenteditable" {
+  style.fill: "#C9D2C0"
+  style.stroke: "#7E8E75"
+}
+
+sysime -> browser: {
+  style.stroke: "#9A948A"
+}
+browser -> ipc: {
+  style.stroke: "#9A948A"
+}
+ipc -> renderer: {
+  style.stroke: "#9A948A"
+}
+renderer -> imc: {
+  style.stroke: "#9A948A"
+}
+imc -> domev: {
+  style.stroke: "#9A948A"
+}
+domev -> target: {
+  style.stroke: "#9A948A"
+}

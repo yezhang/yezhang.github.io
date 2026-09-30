@@ -1,0 +1,23 @@
+direction: right
+
+client: "输入组件（Client）\n文本框、编辑器" {
+  style.fill: "#DCE1D4"
+  style.stroke: "#8FA088"
+}
+os: "OS 输入法框架\nmacOS: TIS / IMKit\nWindows: TSF / IMM32\nLinux: IBus / Fcitx\nWayland: text-input" {
+  style.fill: "#E8E2D4"
+  style.stroke: "#AFA48E"
+}
+provider: "输入法（Provider）" {
+  style.fill: "#D8E0E2"
+  style.stroke: "#86A0A6"
+}
+
+client <-> os: "文本输入会话" {
+  style.stroke: "#9A948A"
+  style.font-color: "#55524C"
+}
+os <-> provider: "按键路由 / 合成文本投递" {
+  style.stroke: "#9A948A"
+  style.font-color: "#55524C"
+}
