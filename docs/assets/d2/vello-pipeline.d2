@@ -1,0 +1,42 @@
+direction: down
+
+curves: "贝塞尔曲线 / 椭圆弧（场景编码）" {
+  style.fill: "#E7E3DA"
+  style.stroke: "#9A948A"
+}
+flatten: "① Flattening\nGPU 上按曲率自适应细分为线段\n描边在此完成：Euler spiral stroke expansion\n（中心线 → 等距轮廓）" {
+  style.fill: "#D8E0E2"
+  style.stroke: "#86A0A6"
+}
+lines: "线段流" {
+  style.fill: "#E8E2D4"
+  style.stroke: "#AFA48E"
+}
+coarse: "② Coarse raster\n16×16 tile 分箱 + 绕数记账\n（backdrop 向右传播）" {
+  style.fill: "#E4D5D2"
+  style.stroke: "#B09895"
+}
+fine: "③ Fine raster\n每像素解析面积积分\n（有符号梯形面积 → 绕数 → coverage alpha）" {
+  style.fill: "#DCE1D4"
+  style.stroke: "#8FA088"
+}
+pixels: "像素" {
+  style.fill: "#C9D2C0"
+  style.stroke: "#7E8E75"
+}
+
+curves -> flatten: {
+  style.stroke: "#9A948A"
+}
+flatten -> lines: {
+  style.stroke: "#9A948A"
+}
+lines -> coarse: {
+  style.stroke: "#9A948A"
+}
+coarse -> fine: {
+  style.stroke: "#9A948A"
+}
+fine -> pixels: {
+  style.stroke: "#9A948A"
+}

@@ -1,0 +1,60 @@
+direction: down
+
+scene: "场景\nCPU 编码的定长元素字节流\n（可拼接 / 缓存字形）" {
+  style.fill: "#E7E3DA"
+  style.stroke: "#9A948A"
+}
+scan: "① 元素处理（scan）\n标注全局变换 + 包围盒\n【乱序并行】" {
+  style.fill: "#D8E0E2"
+  style.stroke: "#86A0A6"
+}
+binning: "② 分箱\n投进 256×256 bin\npartition 内有序\n【乱序并行】" {
+  style.fill: "#E8E2D4"
+  style.stroke: "#AFA48E"
+}
+coarse: "③ 粗光栅化\n合并恢复全局顺序（sort 在此）\ntile 覆盖位图 + backdrop 传播\n前缀和分配输出\n【部分顺序】" {
+  style.fill: "#E4D5D2"
+  style.stroke: "#B09895"
+}
+fine: "④ 细光栅化\n解析面积积分 → coverage\n【乱序并行】" {
+  style.fill: "#DCE1D4"
+  style.stroke: "#8FA088"
+}
+output: "输出纹理" {
+  style.fill: "#C9D2C0"
+  style.stroke: "#7E8E75"
+}
+
+pillar_scan: "支柱二\nPrefix-sum 并行化\n状态 → almost monoid → scan" {
+  style.fill: "#DED8DC"
+  style.stroke: "#9A8E96"
+}
+pillar_sort: "支柱一\nSort-middle\n前段乱序并行\n后段按序保正确" {
+  style.fill: "#DED8DC"
+  style.stroke: "#9A8E96"
+}
+
+scene -> scan: {
+  style.stroke: "#9A948A"
+}
+scan -> binning: {
+  style.stroke: "#9A948A"
+}
+binning -> coarse: {
+  style.stroke: "#9A948A"
+}
+coarse -> fine: {
+  style.stroke: "#9A948A"
+}
+fine -> output: {
+  style.stroke: "#9A948A"
+}
+
+pillar_scan -> scan: {
+  style.stroke: "#9A8E96"
+  style.stroke-dash: 4
+}
+pillar_sort -> coarse: {
+  style.stroke: "#9A8E96"
+  style.stroke-dash: 4
+}
