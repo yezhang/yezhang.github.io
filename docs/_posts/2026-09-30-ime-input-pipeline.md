@@ -17,15 +17,7 @@ categories: 输入法 前端 技术
 
 文本输入的本质是一个**经操作系统托管的三角关系**：
 
-```
-┌─────────────────────┐         ┌──────────────────────┐
-│   输入组件（Client） │ ←─会话─→ │  OS 输入法框架        │ ←─→ 输入法（Provider）
-│   文本框、编辑器      │         │  macOS: TIS/IMKit    │
-│                       │         │  Win: TSF / IMM32    │
-└─────────────────────┘         │  Linux: IBus/Fcitx/  │
-                                │  Wayland: text-input │
-                                └──────────────────────┘
-```
+<img src="/assets/img/ime-triangle.svg" alt="OS 托管的三角关系：输入组件、OS 输入法框架与输入法三方经会话交互" style="max-width:100%; height:auto; margin: 1em 0;">
 
 - **输入法（Provider）**的角色是"按键 → 候选 → 文本"的转换器；
 - **输入组件（Client）**的角色是"声明我是一个文本输入目标"：报告光标位置、提供周围文本、消费合成文本；
@@ -71,28 +63,7 @@ client 侧回答的问题是："我如何让系统把我当一个合法的文本
 
 现在进入浏览器。如果第三节和第四节是"两边各自的外交部"，那么 Chromium 就是一个同时运转着**两套外交部**的双进程国家。`textarea` 接收 IME 的真相是：
 
-```
-系统 IME (macOS TIS / Win TSF / Linux IBus)
-   │
-   ▼ ① Browser 进程：平台 client 接口在这里实现
-RenderWidgetHostViewMac ──实现──► NSTextInputClient (insertText/setMarkedText…)
-RenderWidgetHostViewAura ──实现──► ui::TextInputClient (SetCompositionText…)
-   │
-   ▼ ② 跨进程 IPC（WidgetInputHandler mojom）
-ImeSetComposition / ImeCommitText / ImeFinishComposingText
-   │
-   ▼ ③ Renderer 进程 → Blink
-RenderWidget → WebViewImpl::setComposition / confirmComposition
-   │
-   ▼ ④ Blink 核心
-InputMethodController (core/editing/ime/)  ← IME 会话状态机
-   │
-   ▼ ⑤ 事件派发到焦点元素
-compositionstart/update/end + beforeinput + input
-   │
-   ▼
-<textarea> / <input> / contenteditable
-```
+<img src="/assets/img/chromium-ime-pipeline.svg" alt="Chromium 中一条 IME 消息从系统 IME 经 Browser 进程、IPC、Renderer、Blink 到 DOM 事件的五层旅程" style="max-width:100%; height:auto; margin: 1em 0;">
 
 **① Browser 进程承接平台接口。** 这是系统 IME 真正的对话方。以 Aura（Linux/ChromeOS 路径）为例，`RenderWidgetHostViewAura` 明确实现了 `ui::TextInputClient`：`SetCompositionText()` 把合成文本转成 IPC 发给 renderer，`ConfirmCompositionText()` 对应 `ImeFinishComposingText`。macOS 上则是 `RenderWidgetHostViewMac` 实现 `NSTextInputClient`。这些类只是翻译官，把平台回调打包发 IPC——源码里甚至留着 WebKit 时代"composition 不能带 selection range"的 TODO 注释。
 
@@ -112,16 +83,7 @@ compositionstart/update/end + beforeinput + input
 
 于是在 Canvas 上做富文本编辑器（各类 Web 代码编辑器、绘图软件的文字工具，早期 VS Code 的 Web 版、xterm.js 等都走过这条路）时，标准的 hack 是：**在 Canvas 之上放一个不可见的 `<textarea>`（或 contenteditable div），让它做系统的"代理输入目标"，自己只做渲染。**
 
-```
-┌──────────────────────────────┐
-│  <canvas>  渲染层             │  ← 你自己画文本、光标、选区高亮
-│                              │
-│  ┌────────────────────────┐  │
-│  │ <textarea opacity:0>   │  │  ← 代理：真实持有焦点、文本值、选区
-│  └────────────────────────┘  │     接收 composition/input，唤起系统 IME
-└──────────────────────────────┘
-        同步：textarea.value/selection → 你的文档模型 → 重绘 canvas
-```
+<img src="/assets/img/canvas-textarea.svg" alt="Canvas 编辑器分层：透明 textarea 作为代理输入目标叠加上方，值与选区同步回文档模型并重绘 canvas" style="max-width:100%; height:auto; margin: 1em 0;">
 
 为什么必须这样做，而不是自己监听 `keydown` 拼字符串：
 
